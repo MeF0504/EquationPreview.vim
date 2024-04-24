@@ -1,11 +1,18 @@
 scriptencoding utf-8
-let s:script_file = expand('<sfile>:h')..'/equationpreview/main.py'
+py3file <sfile>:h/equationpreview/main.py
+python3 import vim
 
 function! s:set_param() abort
-    let s:tmpfile = get(s:, 'tmpfile', tempname()..'.py')
-    let s:color = get(g:, 'equationpreview_color', 'black')
-    let s:fontsize = get(g:, 'equationpreview_fontsize', 14)
-    let s:width = get(g:, 'equationpreview_width', 300)
+    let s:packages = get(g:, 'equationpreview_headers', [
+                \ '\documentclass[a5paper,landscape,uplatex]{article}',
+                \ '\pagestyle{empty}',
+                \ '\usepackage{bxpapersize}',
+                \ '\usepackage{amsmath}',
+                \ '\usepackage{bm}',
+                \])
+    let s:cmd = get(g:, 'equationpreview_command', 'ptex2pdf')
+    let s:cmd_opt = get(g:, 'equationpreview_opts', ['-l'])
+    let s:fs = get(g:, 'equationpreview_fontsize', 20)
 endfunction
 
 function! s:get_eq_str(first, last) abort
@@ -29,42 +36,24 @@ function! s:get_eq_str(first, last) abort
     endif
 endfunction
 
-function! s:get_script(eq_list) abort
-    if filereadable(s:script_file)
-        let script = join(readfile(s:script_file), "\n")
-        let script = printf(script, a:eq_list,
-                    \ s:width, s:color, s:fontsize)
-        call writefile(split(script, "\n"), s:tmpfile)
-        let ret = v:true
-        " echomsg s:tmpfile
-    else
-        let ret = v:false
-    endif
-    return ret
-endfunction
-
 function! equationpreview#main(...) abort range
     call s:set_param()
+    if !executable(s:cmd)
+        echo printf('%s is not executable.', s:cmd)
+        return
+    endif
 
     if a:0 == 0
         let eq_str = s:get_eq_str(a:firstline, a:lastline)
     else
         let eq_str = a:1
     endif
-    let eq_list = '['..join(map(split(eq_str, '\\\\'), "printf('r\"%s\"', v:val)"), ', ')..']'
-    let eq_list = substitute(eq_list, '&', '', 'g')
-    let res = s:get_script(eq_list)
-    if !res
-        echohl Error
-        echomsg 'failed to create a python script'
-        echohl None
-        return
-    endif
-    if has('nvim')
-        let jid = jobstart(printf('python3 %s', s:tmpfile))
-    else
-        let jid = job_start(printf('python3 %s', s:tmpfile))
-    endif
-    " echomsg jid
+    python3 eqpreview_main(vim.eval('eq_str'), vim.eval('s:cmd'), vim.eval('s:fs'),
+                \ vim.eval('s:packages'), vim.eval('s:cmd_opt'))
 endfunction
+
+augroup EqPreview
+    autocmd!
+    autocmd QuitPre * python3 eqpreview_close()
+augroup END
 

@@ -12,21 +12,17 @@ If no the equation are set,
 1. If cursor is surrounded by `$$`, display the equation inside `$$`.
 2. Otherwise display the current line in LaTeX format.
 
-<img src=sample/equationpreview1.gif width="50%">
-<img src=sample/equationpreview2.gif width="50%">
-
 ```vim
 [range]EqPreviewRange
 ```
 Display the equation in [range] lines in another window.
 
-<img src=sample/equationpreviewrange.gif width="50%">
-
 ## Requirements
-* `job` supported Vim or neovim.
-* [Python3](https://www.python.org/) and [matplotlib](https://matplotlib.org/)  
-    NOTE: Python support of Vim/neovim is not required.
-    Python is called as a job.
+* `python3` supported Vim.
+```vim
+has('python3') " == 1
+```
+* any latex command to make PDF file from TeX file.
 
 ## Installation
 
@@ -37,13 +33,24 @@ Plug 'MeF0504/EquationPreview.vim'
 ```
 
 ## Options
-* `g:equationpreview_color`  
-    Specify the text color.
+* `g:equationpreview_headers`  
+    Header lines of TeX file.  
+    default: `[
+              '\documentclass[a5paper,landscape,uplatex]{article}',
+              '\pagestyle{empty}',
+              '\usepackage{bxpapersize}',
+              '\usepackage{amsmath}',
+              '\usepackage{bm}',
+             ]`
+* `g:equationpreview_command`  
+    A command to be used for compile tex file.
+    default: `ptex2pdf`
+* `g:equationpreview_opts`  
+    Options for g:equationpreview_command.  
+    default: `['-l']`
 * `g:equationpreview_fontsize`  
     Specify the text font size.
-* `g:equationpreview_width`  
-    Specify the width of text-showing window.
-    The unit is pixel.
+    default: 20
 
 ## License
 [MIT](https://github.com/MeF0504/EquationPreview.vim/blob/main/LICENSE)
