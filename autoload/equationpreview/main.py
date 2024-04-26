@@ -5,18 +5,19 @@ import platform
 from pathlib import Path
 from typing import Optional, List
 
-tmp_dir: Optional[tempfile.TemporaryDirectory] = None
+eqpreview_tmpdir: Optional[tempfile.TemporaryDirectory] = None
 
 
 def eqpreview_close() -> None:
-    global tmp_dir
-    tmp_dir.cleanup()
-    tmp_dir = None
+    global eqpreview_tmpdir
+    if eqpreview_tmpdir is not None:
+        eqpreview_tmpdir.cleanup()
+        eqpreview_tmpdir = None
 
 
 def eqpreview_main(eq_str: str, texcmd: str, fontsize: int,
                    packages: List[str], opts: List[str]) -> None:
-    global tmp_dir
+    global eqpreview_tmpdir
     shell = False
     if platform.system() == 'Windows':
         cmd = 'start'
@@ -28,10 +29,10 @@ def eqpreview_main(eq_str: str, texcmd: str, fontsize: int,
     else:
         print('Unsupported platform')
         return
-    if tmp_dir is None:
-        tmp_dir = tempfile.TemporaryDirectory()
+    if eqpreview_tmpdir is None:
+        eqpreview_tmpdir = tempfile.TemporaryDirectory()
     index = 0
-    os.chdir(tmp_dir.name)
+    os.chdir(eqpreview_tmpdir.name)
     while True:
         tmp_file = Path(f'eqpreview{index}.tex')
         if not tmp_file.is_file():

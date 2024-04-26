@@ -54,6 +54,6 @@ endfunction
 
 augroup EqPreview
     autocmd!
-    autocmd QuitPre * python3 eqpreview_close()
+    autocmd VimLeavePre * python3 eqpreview_close()
 augroup END
 
