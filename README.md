@@ -33,7 +33,7 @@ Plug 'MeF0504/EquationPreview.vim'
 ```
 
 ## Options
-* `g:equationpreview_headers`  
+* `g:equationpreview#headers`  
     Header lines of TeX file.  
     default: `[
               '\documentclass[a5paper,landscape,uplatex]{article}',
@@ -42,13 +42,13 @@ Plug 'MeF0504/EquationPreview.vim'
               '\usepackage{amsmath}',
               '\usepackage{bm}',
              ]`
-* `g:equationpreview_command`  
+* `g:equationpreview#command`  
     A command to be used for compile tex file.
     default: `ptex2pdf`
-* `g:equationpreview_opts`  
+* `g:equationpreview#opts`  
     Options for g:equationpreview_command.  
     default: `['-l']`
-* `g:equationpreview_fontsize`  
+* `g:equationpreview#fontsize`  
     Specify the text font size.
     default: 20
 

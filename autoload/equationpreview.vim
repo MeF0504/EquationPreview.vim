@@ -3,16 +3,16 @@ py3file <sfile>:h/equationpreview/main.py
 python3 import vim
 
 function! s:set_param() abort
-    let s:packages = get(g:, 'equationpreview_headers', [
+    let s:packages = get(g:, 'equationpreview#headers', [
                 \ '\documentclass[a5paper,landscape,uplatex]{article}',
                 \ '\pagestyle{empty}',
                 \ '\usepackage{bxpapersize}',
                 \ '\usepackage{amsmath}',
                 \ '\usepackage{bm}',
                 \])
-    let s:cmd = get(g:, 'equationpreview_command', 'ptex2pdf')
-    let s:cmd_opt = get(g:, 'equationpreview_opts', ['-l'])
-    let s:fs = get(g:, 'equationpreview_fontsize', 20)
+    let s:cmd = get(g:, 'equationpreview#command', 'ptex2pdf')
+    let s:cmd_opt = get(g:, 'equationpreview#opts', ['-l'])
+    let s:fs = get(g:, 'equationpreview#fontsize', 20)
 endfunction
 
 function! s:get_eq_str(first, last) abort
