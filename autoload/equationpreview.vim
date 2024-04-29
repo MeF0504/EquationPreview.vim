@@ -57,10 +57,13 @@ function! equationpreview#log(index=-1) abort
         return
     endif
     if a:index < 0
-        let logfile = glob(g:equationpreview#tmpdir..'/*.log', 0, 1)[-1]
+        let logfiles = glob(g:equationpreview#tmpdir..'/*.log', 0, 1)
+        let idxs = map(logfiles, "str2nr(fnamemodify(v:val, ':t')[9:-5])")
+        let idx = sort(idxs, 'n')[-1]
     else
-        let logfile = g:equationpreview#tmpdir..printf('/eqpreview%d.log', a:index)
+        let idx = a:index
     endif
+    let logfile = g:equationpreview#tmpdir..printf('/eqpreview%d.log', idx)
     if !filereadable(logfile)
         echo printf('log file %s is not found.', logfile)
         return
