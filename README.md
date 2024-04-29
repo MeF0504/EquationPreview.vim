@@ -17,6 +17,12 @@ If no the equation are set,
 ```
 Display the equation in [range] lines in another window.
 
+```vim
+EqPreviewLog [index]
+```
+Open a log file.
+If `index` is not set, open the latest log file.
+
 ## Requirements
 * `python3` supported Vim.
 ```vim

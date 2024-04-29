@@ -1,6 +1,5 @@
 scriptencoding utf-8
 py3file <sfile>:h/equationpreview/main.py
-python3 import vim
 
 function! s:set_param() abort
     let s:packages = get(g:, 'equationpreview#headers', [
@@ -50,6 +49,24 @@ function! equationpreview#main(...) abort range
     endif
     python3 eqpreview_main(vim.eval('eq_str'), vim.eval('s:cmd'), vim.eval('s:fs'),
                 \ vim.eval('s:packages'), vim.eval('s:cmd_opt'))
+endfunction
+
+function! equationpreview#log(index=-1) abort
+    if empty(get(g:, 'equationpreview#tmpdir', ''))
+        echo 'save dir is not found.'
+        return
+    endif
+    if a:index < 0
+        let logfile = glob(g:equationpreview#tmpdir..'/*.log', 0, 1)[-1]
+    else
+        let logfile = g:equationpreview#tmpdir..printf('/eqpreview%d.log', a:index)
+    endif
+    if !filereadable(logfile)
+        echo printf('log file %s is not found.', logfile)
+        return
+    endif
+    execute 'tabnew '..logfile
+    setlocal readonly
 endfunction
 
 augroup EqPreview

@@ -4,6 +4,7 @@ import subprocess
 import platform
 from pathlib import Path
 from typing import Optional, List
+import vim
 
 eqpreview_tmpdir: Optional[tempfile.TemporaryDirectory] = None
 
@@ -13,6 +14,7 @@ def eqpreview_close() -> None:
     if eqpreview_tmpdir is not None:
         eqpreview_tmpdir.cleanup()
         eqpreview_tmpdir = None
+        vim.command('unlet g:equationpreview#tmpdir')
 
 
 def eqpreview_main(eq_str: str, texcmd: str, fontsize: int,
@@ -31,6 +33,7 @@ def eqpreview_main(eq_str: str, texcmd: str, fontsize: int,
         return
     if eqpreview_tmpdir is None:
         eqpreview_tmpdir = tempfile.TemporaryDirectory()
+        vim.command(f'let g:equationpreview#tmpdir = "{eqpreview_tmpdir.name}"')
     index = 0
     os.chdir(eqpreview_tmpdir.name)
     while True:
